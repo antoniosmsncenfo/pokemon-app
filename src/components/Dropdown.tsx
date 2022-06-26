@@ -1,7 +1,6 @@
 
 import React, { FC, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Icon } from 'galio-framework';
 
 interface Props {
   label: string;
@@ -31,7 +30,6 @@ const Dropdown: FC<Props> = ({ label }) => {
     >
       {renderDropdown()}
       <Text style={styles.buttonText}>{label}</Text>
-      <Icon name="circle-08" family="Galio" color={'red'} size={50}/>
     </TouchableOpacity>
   );
 };
