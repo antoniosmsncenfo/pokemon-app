@@ -84,33 +84,38 @@ export const MainScreen = () => {
                 <Image source={pokemon1Image} />
                 <Image source={pokemon2Image} />
             </View>
-            <View style={styles.imagesSection}>
-                <Text >Nombre Pokemon</Text>
-                <Progress.Bar progress={0.8} width={200} height={16} />
+            <View style={styles.nameLifeSection}>
+                <View style={styles.nameLife}>
+                    <Text style={styles.pokemonNameText}>Nombre Pokemon</Text>
+                    <Progress.Bar progress={0.8} width={100} height={16} />
+                </View>
+                <View style={styles.nameLife}>
+                <Text style={styles.pokemonNameText}>Nombre Pokemon</Text>
+                    <Progress.Bar progress={0.8} width={100} height={16} />
+                </View>
             </View>
             <View style={styles.powersSection}>
                 <View style={styles.pokemonPowerSection}>
                     <View style={styles.rowPowerSection}>
-                        <PowerButton powerName="Poder 1" value={10} onPressPower={(value) => { console.log(value); }} />
-                        <PowerButton powerName="Poder 1" value={10} onPressPower={(value) => { console.log(value); }} />
+                        <PowerButton powerName="Poder 10" value={10} onPressPower={value => { console.log(value); }} />
+                        <PowerButton powerName="Poder 20" value={20} onPressPower={value => { console.log(value); }} />
                     </View>
                     <View style={styles.rowPowerSection}>
-                        <PowerButton powerName="Poder 1" value={10} onPressPower={(value) => { console.log(value); }} />
-                        <PowerButton powerName="Poder 1" value={10} onPressPower={(value) => { console.log(value); }} />
+                        <PowerButton powerName="Take down" value={30} onPressPower={value => { console.log(value); }} />
+                        <PowerButton powerName="Poder 40" value={40} onPressPower={value => { console.log(value); }} />
                     </View>
                 </View>
                 <View style={styles.pokemonPowerSection}>
                     <View style={styles.rowPowerSection}>
-                        <PowerButton powerName="Poder 1" value={10} onPressPower={(value) => { console.log(value); }} />
-                        <PowerButton powerName="Poder 1" value={10} onPressPower={(value) => { console.log(value); }} />
+                        <PowerButton powerName="Poder 50" value={50} onPressPower={value => { console.log(value); }} />
+                        <PowerButton powerName="Poder 60" value={60} onPressPower={value => { console.log(value); }} />
                     </View>
                     <View style={styles.rowPowerSection}>
-                        <PowerButton powerName="Poder 1" value={10} onPressPower={(value) => { console.log(value); }} />
-                        <PowerButton powerName="Poder 1" value={10} onPressPower={(value) => { console.log(value); }} />
+                        <PowerButton powerName="Poder 70" value={70} onPressPower={value => { console.log(value); }} />
+                        <PowerButton powerName="Poder 80" value={80} onPressPower={value => { console.log(value); }} />
                     </View>
                 </View>
             </View>
-
         </View>
     );
 };
@@ -136,6 +141,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         paddingTop: 20,
+    },
+    nameLifeSection: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingTop: 20,
+    },
+    nameLife: {
+        alignItems: 'center',
+    },
+    pokemonNameText: {
+        paddingBottom: 10,
     },
     powersSection: {
         flexDirection: 'row',

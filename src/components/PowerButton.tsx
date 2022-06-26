@@ -24,6 +24,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         borderRadius: 10,
+        width: 90,
+        alignItems: 'center',
     },
     powerButtonText: {
         fontSize: 16,
