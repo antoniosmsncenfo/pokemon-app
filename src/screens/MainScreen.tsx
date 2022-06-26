@@ -1,33 +1,41 @@
-import React from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { useState } from 'react';
 import { PowerButton } from '../components/PowerButton';
 import * as Progress from 'react-native-progress';
+import { fetchPokemons } from '../api/PokemonService';
 
-const data = [
-    { label: 'Item 1', value: '1', data: 50 },
-    { label: 'Item 2', value: '2', data: 50 },
-    { label: 'Item 3', value: '3', data: 50 },
-    { label: 'Item 4', value: '4', data: 50 },
-    { label: 'Item 5', value: '5', data: 50 },
-    { label: 'Item 6', value: '6', data: 50 },
-    { label: 'Item 7', value: '7', data: 50 },
-    { label: 'Item 8', value: '8', data: 50 },
-];
-
+interface IPokemonsList {
+    name: string;
+    url: string;
+}
 
 export const MainScreen = () => {
+    useEffect(() => {
+        fetchPokemons().then((result: IPokemonsList[]) => {
+            loadPokemonsList(result);
+        });
+    }, []);
+
+    const loadPokemonsList = (pokemosList: IPokemonsList[]) => {
+        const sortedList = pokemosList.sort((a, b) => {
+            return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
+        });
+        setPokemonsList(sortedList);
+    };
+
     const defaultPokemonImage = require('../assets/default-pokemon.png');
-    const [dropdownPokemon1, setDropdownPokemon1] = useState(null);
-    const [dropdownPokemon2, setDropdownPokemon2] = useState(null);
+    const [dropdownPokemon1, setDropdownPokemon1] = useState<IPokemonsList>({ name: 'Pokemon 1', url: '' });
+    const [dropdownPokemon2, setDropdownPokemon2] = useState<IPokemonsList>({ name: 'Pokemon 2', url: '' });
+    const [pokemonsList, setPokemonsList] = useState<IPokemonsList[]>([]);
     const [pokemon1Image, setPokemon1Image] = useState(defaultPokemonImage);
     const [pokemon2Image, setPokemon2Image] = useState(defaultPokemonImage);
 
-    const _renderItem = (item: any) => {
+    const _renderItem = (item: IPokemonsList) => {
         return (
             <View style={styles.item}>
-                <Text style={styles.textItem}>{item.label}</Text>
+                <Text style={styles.textItem}>{item.name}</Text>
             </View>
         );
     };
@@ -42,16 +50,15 @@ export const MainScreen = () => {
                     <Dropdown
                         style={styles.dropdown}
                         containerStyle={styles.shadow}
-                        data={data}
+                        data={pokemonsList}
                         search
                         searchPlaceholder="Buscar"
-                        labelField="label"
-                        valueField="value"
+                        labelField="name"
+                        valueField="url"
                         placeholder="Seleccione uno"
                         value={dropdownPokemon1}
                         onChange={item => {
                             setDropdownPokemon1(item.value);
-                            console.log('selected', item);
                         }}
                         renderItem={item => _renderItem(item)}
                     />
@@ -60,16 +67,15 @@ export const MainScreen = () => {
                     <Dropdown
                         style={styles.dropdown}
                         containerStyle={styles.shadow}
-                        data={data}
+                        data={pokemonsList}
                         search
                         searchPlaceholder="Buscar"
-                        labelField="label"
-                        valueField="value"
+                        labelField="name"
+                        valueField="url"
                         placeholder="Seleccione uno"
                         value={dropdownPokemon2}
                         onChange={item => {
                             setDropdownPokemon2(item.value);
-                            console.log('selected', item);
                         }}
                         renderItem={item => _renderItem(item)}
                     />
@@ -86,11 +92,11 @@ export const MainScreen = () => {
             </View>
             <View style={styles.nameLifeSection}>
                 <View style={styles.nameLife}>
-                    <Text style={styles.pokemonNameText}>Nombre Pokemon</Text>
+                    <Text style={styles.pokemonNameText}>{dropdownPokemon1?.name}</Text>
                     <Progress.Bar progress={0.8} width={100} height={16} />
                 </View>
                 <View style={styles.nameLife}>
-                <Text style={styles.pokemonNameText}>Nombre Pokemon</Text>
+                    <Text style={styles.pokemonNameText}>{dropdownPokemon2?.name}</Text>
                     <Progress.Bar progress={0.8} width={100} height={16} />
                 </View>
             </View>
