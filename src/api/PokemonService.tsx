@@ -9,3 +9,8 @@ export const fetchPokemons = async () => {
     return response.data.results;
 };
 
+export const fetchPokemon = async (url:string) => {
+    const response = await axios.get(url);
+    return response.data;
+};
+

@@ -4,35 +4,72 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { useState } from 'react';
 import { PowerButton } from '../components/PowerButton';
 import * as Progress from 'react-native-progress';
-import { fetchPokemons } from '../api/PokemonService';
+import { fetchPokemon, fetchPokemons } from '../api/PokemonService';
+import { PokemonInfo } from '../PokemonInfo.model';
 
-interface IPokemonsList {
+interface IPokemon {
     name: string;
     url: string;
+    life: number;
+    currentLife: number
+    image: any;
+    powers: [{ id: number; power: string; value: number; }];
 }
 
+const defaultPokemonInfo: IPokemon = {
+    name: 'Pokemon 2',
+    url: '',
+    life: 100,
+    currentLife: 100,
+    image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/149.png',
+    powers: [{ id: 0, power: 'Mega-Punch', value: 10 }],
+};
+
 export const MainScreen = () => {
+    const [dropdownPokemon1, setDropdownPokemon1] = useState<IPokemon>(defaultPokemonInfo);
+    const [dropdownPokemon2, setDropdownPokemon2] = useState<IPokemon>(defaultPokemonInfo);
+    const [pokemonsList, setPokemonsList] = useState<IPokemon[]>([]);
+    const [pokemon1Info, setPokemon1Info] = useState<IPokemon>(defaultPokemonInfo);
+    const [pokemon2Info, setPokemon2Info] = useState<IPokemon>(defaultPokemonInfo);
+
     useEffect(() => {
-        fetchPokemons().then((result: IPokemonsList[]) => {
-            loadPokemonsList(result);
+        fetchPokemons().then((result: IPokemon[]) => {
+            loadPokemonListFromApi(result);
         });
     }, []);
 
-    const loadPokemonsList = (pokemosList: IPokemonsList[]) => {
-        const sortedList = pokemosList.sort((a, b) => {
+    const loadPokemonListFromApi = (result: IPokemon[]) => {
+        let sortedList: IPokemon[] = result.map((item: IPokemon) => {
+            return { ...defaultPokemonInfo, name: item.name, url: item.url };
+        });
+        sortedList = result.sort((a, b) => {
             return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
         });
         setPokemonsList(sortedList);
     };
 
-    const defaultPokemonImage = require('../assets/default-pokemon.png');
-    const [dropdownPokemon1, setDropdownPokemon1] = useState<IPokemonsList>({ name: 'Pokemon 1', url: '' });
-    const [dropdownPokemon2, setDropdownPokemon2] = useState<IPokemonsList>({ name: 'Pokemon 2', url: '' });
-    const [pokemonsList, setPokemonsList] = useState<IPokemonsList[]>([]);
-    const [pokemon1Image, setPokemon1Image] = useState(defaultPokemonImage);
-    const [pokemon2Image, setPokemon2Image] = useState(defaultPokemonImage);
+    const getPokemonInfo = () => {
+        dropdownPokemon1.url && fetchPokemon(dropdownPokemon1.url).then((result: PokemonInfo) => {
+            setPokemon1Info({
+                ...dropdownPokemon1,
+                life: result.stats[0].base_stat,
+                image: result.sprites.front_default,
+                currentLife: result.stats[0].base_stat,
+            });
+            //console.log(pokemon1Info);
+        });
+        dropdownPokemon2.url && fetchPokemon(dropdownPokemon2.url).then((result: PokemonInfo) => {
+            setPokemon2Info({
+                ...dropdownPokemon2,
+                life: result.stats[0].base_stat,
+                image: result.sprites.front_default,
+                currentLife: result.stats[0].base_stat,
+            });
+            console.log(pokemon2Info);
+        });
+    };
 
-    const _renderItem = (item: IPokemonsList) => {
+    const _renderItem = (item: IPokemon) => {
         return (
             <View style={styles.item}>
                 <Text style={styles.textItem}>{item.name}</Text>
@@ -58,7 +95,8 @@ export const MainScreen = () => {
                         placeholder="Seleccione uno"
                         value={dropdownPokemon1}
                         onChange={item => {
-                            setDropdownPokemon1(item.value);
+                            setDropdownPokemon1({ ...defaultPokemonInfo, name: item.name, url: item.url });
+                            console.log(dropdownPokemon1);
                         }}
                         renderItem={item => _renderItem(item)}
                     />
@@ -75,28 +113,31 @@ export const MainScreen = () => {
                         placeholder="Seleccione uno"
                         value={dropdownPokemon2}
                         onChange={item => {
-                            setDropdownPokemon2(item.value);
+                            setDropdownPokemon2({ ...defaultPokemonInfo, name: item.name, url: item.url });
+                            console.log(dropdownPokemon2);
                         }}
                         renderItem={item => _renderItem(item)}
                     />
                 </View>
             </View>
             <View style={styles.SelectButtonSection}>
-                <TouchableOpacity style={styles.selectButton}>
+                <TouchableOpacity
+                    style={styles.selectButton}
+                    onPress={() => { getPokemonInfo(); }}>
                     <Text style={styles.selectButtonText}>Seleccionar</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.imagesSection}>
-                <Image source={pokemon1Image} />
-                <Image source={pokemon2Image} />
+                <Image style={{ height: 150, width: 150 }} source={{ uri: pokemon1Info.image }} />
+                <Image style={{ height: 150, width: 150 }} source={{ uri: pokemon2Info.image }} />
             </View>
             <View style={styles.nameLifeSection}>
                 <View style={styles.nameLife}>
-                    <Text style={styles.pokemonNameText}>{dropdownPokemon1?.name}</Text>
+                    <Text style={styles.pokemonNameText}>{`${dropdownPokemon1.name} ${pokemon1Info.life}`}</Text>
                     <Progress.Bar progress={0.8} width={100} height={16} />
                 </View>
                 <View style={styles.nameLife}>
-                    <Text style={styles.pokemonNameText}>{dropdownPokemon2?.name}</Text>
+                    <Text style={styles.pokemonNameText}>{`${dropdownPokemon2.name} ${pokemon2Info.life}`}</Text>
                     <Progress.Bar progress={0.8} width={100} height={16} />
                 </View>
             </View>
