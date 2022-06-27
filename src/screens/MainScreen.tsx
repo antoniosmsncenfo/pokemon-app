@@ -133,89 +133,91 @@ export const MainScreen = () => {
         );
     };
     return (
-        <View style={styles.container}>
-            <View style={styles.dropdownLabelsSection}>
-                <Text>Pokemon 1</Text>
-                <Text>Pokemon 2</Text>
-            </View>
-            <View style={styles.dropdownsSection}>
-                <View style={[styles.dropdownView]}>
-                    <Dropdown
-                        style={styles.dropdown}
-                        containerStyle={styles.shadow}
-                        data={pokemonsList}
-                        search
-                        searchPlaceholder="Buscar"
-                        labelField="name"
-                        valueField="url"
-                        placeholder="Seleccione uno"
-                        value={dropdownPokemon1}
-                        onChange={item => {
-                            setDropdownPokemon1({ ...defaultPokemonInfo, name: item.name, url: item.url });
-                            console.log(dropdownPokemon1);
-                        }}
-                        renderItem={item => _renderItem(item)}
-                    />
+        <View style={{ height: '100%', backgroundColor: '#FFFC9B' }}>
+            <View style={styles.container}>
+                <View style={styles.dropdownLabelsSection}>
+                    <Text style={styles.dropdownLabelText}>Pokemon 1</Text>
+                    <Text style={styles.dropdownLabelText}>Pokemon 2</Text>
                 </View>
-                <View style={[styles.dropdownView]}>
-                    <Dropdown
-                        style={styles.dropdown}
-                        containerStyle={styles.shadow}
-                        data={pokemonsList}
-                        search
-                        searchPlaceholder="Buscar"
-                        labelField="name"
-                        valueField="url"
-                        placeholder="Seleccione uno"
-                        value={dropdownPokemon2}
-                        onChange={item => {
-                            setDropdownPokemon2({ ...defaultPokemonInfo, name: item.name, url: item.url });
-                            console.log(dropdownPokemon2);
-                        }}
-                        renderItem={item => _renderItem(item)}
-                    />
-                </View>
-            </View>
-            <View style={styles.SelectButtonSection}>
-                <TouchableOpacity
-                    style={styles.selectButton}
-                    onPress={() => { getPokemonInfo(); }}>
-                    <Text style={styles.selectButtonText}>Seleccionar</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.imagesSection}>
-                <Image style={{ height: 150, width: 150 }} source={{ uri: pokemon1Info.image }} />
-                <Image style={{ height: 150, width: 150 }} source={{ uri: pokemon2Info.image }} />
-            </View>
-            <View style={styles.nameLifeSection}>
-                <View style={styles.nameLife}>
-                    <Text style={styles.pokemonNameText}>{`${dropdownPokemon1.name} ${pokemon1Info.currentLife}/${pokemon1Info.life}`}</Text>
-                    <Progress.Bar progress={(pokemon1Info.currentLife / pokemon1Info.life)} width={100} height={16} />
-                </View>
-                <View style={styles.nameLife}>
-                    <Text style={styles.pokemonNameText}>{`${dropdownPokemon2.name} ${pokemon2Info.currentLife}/${pokemon2Info.life}`}</Text>
-                    <Progress.Bar progress={(pokemon2Info.currentLife / pokemon2Info.life)} width={100} height={16} />
-                </View>
-            </View>
-            <View style={styles.powersSection}>
-                <View style={styles.pokemonPowerSection}>
-                    <View style={styles.rowPowerSection}>
-                        <PowerButton powerName={pokemon1Info.powers[0].name} powerLevel={pokemon1Info.powers[0].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
-                        <PowerButton powerName={pokemon1Info.powers[1].name} powerLevel={pokemon1Info.powers[1].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
+                <View style={styles.dropdownsSection}>
+                    <View style={[styles.dropdownView]}>
+                        <Dropdown
+                            style={styles.dropdown}
+                            containerStyle={styles.shadow}
+                            data={pokemonsList}
+                            search
+                            searchPlaceholder="Buscar"
+                            labelField="name"
+                            valueField="url"
+                            placeholder="Seleccione uno"
+                            value={dropdownPokemon1}
+                            onChange={item => {
+                                setDropdownPokemon1({ ...defaultPokemonInfo, name: item.name, url: item.url });
+                                console.log(dropdownPokemon1);
+                            }}
+                            renderItem={item => _renderItem(item)}
+                        />
                     </View>
-                    <View style={styles.rowPowerSection}>
-                        <PowerButton powerName={pokemon1Info.powers[2].name} powerLevel={pokemon1Info.powers[2].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
-                        <PowerButton powerName={pokemon1Info.powers[3].name} powerLevel={pokemon1Info.powers[3].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
+                    <View style={[styles.dropdownView]}>
+                        <Dropdown
+                            style={styles.dropdown}
+                            containerStyle={styles.shadow}
+                            data={pokemonsList}
+                            search
+                            searchPlaceholder="Buscar"
+                            labelField="name"
+                            valueField="url"
+                            placeholder="Seleccione uno"
+                            value={dropdownPokemon2}
+                            onChange={item => {
+                                setDropdownPokemon2({ ...defaultPokemonInfo, name: item.name, url: item.url });
+                                console.log(dropdownPokemon2);
+                            }}
+                            renderItem={item => _renderItem(item)}
+                        />
                     </View>
                 </View>
-                <View style={styles.pokemonPowerSection}>
-                    <View style={styles.rowPowerSection}>
-                        <PowerButton powerName={pokemon2Info.powers[0].name} powerLevel={pokemon2Info.powers[0].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
-                        <PowerButton powerName={pokemon2Info.powers[1].name} powerLevel={pokemon2Info.powers[1].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
+                <View style={styles.SelectButtonSection}>
+                    <TouchableOpacity
+                        style={styles.selectButton}
+                        onPress={() => { getPokemonInfo(); }}>
+                        <Text style={styles.selectButtonText}>Seleccionar</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.imagesSection}>
+                    <Image style={{ height: 150, width: 150 }} source={{ uri: pokemon1Info.image }} />
+                    <Image style={{ height: 150, width: 150 }} source={{ uri: pokemon2Info.image }} />
+                </View>
+                <View style={styles.nameLifeSection}>
+                    <View style={styles.nameLife}>
+                        <Text style={styles.pokemonNameText}>{`${dropdownPokemon1.name} ${pokemon1Info.currentLife}/${pokemon1Info.life}`}</Text>
+                        <Progress.Bar progress={(pokemon1Info.currentLife / pokemon1Info.life)} width={100} height={16} />
                     </View>
-                    <View style={styles.rowPowerSection}>
-                        <PowerButton powerName={pokemon2Info.powers[2].name} powerLevel={pokemon2Info.powers[2].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
-                        <PowerButton powerName={pokemon2Info.powers[3].name} powerLevel={pokemon2Info.powers[3].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
+                    <View style={styles.nameLife}>
+                        <Text style={styles.pokemonNameText}>{`${dropdownPokemon2.name} ${pokemon2Info.currentLife}/${pokemon2Info.life}`}</Text>
+                        <Progress.Bar progress={(pokemon2Info.currentLife / pokemon2Info.life)} width={100} height={16} />
+                    </View>
+                </View>
+                <View style={styles.powersSection}>
+                    <View style={styles.pokemonPowerSection}>
+                        <View style={styles.rowPowerSection}>
+                            <PowerButton powerName={pokemon1Info.powers[0].name} powerLevel={pokemon1Info.powers[0].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
+                            <PowerButton powerName={pokemon1Info.powers[1].name} powerLevel={pokemon1Info.powers[1].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
+                        </View>
+                        <View style={styles.rowPowerSection}>
+                            <PowerButton powerName={pokemon1Info.powers[2].name} powerLevel={pokemon1Info.powers[2].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
+                            <PowerButton powerName={pokemon1Info.powers[3].name} powerLevel={pokemon1Info.powers[3].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
+                        </View>
+                    </View>
+                    <View style={styles.pokemonPowerSection}>
+                        <View style={styles.rowPowerSection}>
+                            <PowerButton powerName={pokemon2Info.powers[0].name} powerLevel={pokemon2Info.powers[0].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
+                            <PowerButton powerName={pokemon2Info.powers[1].name} powerLevel={pokemon2Info.powers[1].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
+                        </View>
+                        <View style={styles.rowPowerSection}>
+                            <PowerButton powerName={pokemon2Info.powers[2].name} powerLevel={pokemon2Info.powers[2].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
+                            <PowerButton powerName={pokemon2Info.powers[3].name} powerLevel={pokemon2Info.powers[3].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
+                        </View>
                     </View>
                 </View>
             </View>
@@ -232,10 +234,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 10,
         paddingTop: 10,
+        marginHorizontal: 20,
+    },
+    dropdownLabelText: {
+        fontSize: 20,
+        color: '#975592',
+        fontWeight: 'bold',
     },
     dropdownsSection: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginHorizontal: 20,
     },
     SelectButtonSection: {
         paddingTop: 20,
@@ -255,6 +264,8 @@ const styles = StyleSheet.create({
     },
     pokemonNameText: {
         paddingBottom: 10,
+        color: '#975592',
+        fontSize: 16,
     },
     powersSection: {
         flexDirection: 'row',
@@ -273,9 +284,15 @@ const styles = StyleSheet.create({
     selectButton: {
         alignItems: 'center',
         justifyContent: 'center',
+        borderColor: '#975592',
+        backgroundColor: '#975592',
+        borderWidth: 1,
+        borderRadius: 10,
+        marginHorizontal: 20,
     },
     selectButtonText: {
         fontSize: 20,
+        color: 'white',
     },
     dropdown: {
         backgroundColor: 'white',
