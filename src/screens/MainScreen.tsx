@@ -13,7 +13,11 @@ interface IPokemon {
     life: number;
     currentLife: number
     image: any;
-    powers: [{ id: number; power: string; value: number; }];
+    powers: IPower[];
+}
+
+interface IPower {
+    id: number; name: string; powerLevel: number;
 }
 
 const defaultPokemonInfo: IPokemon = {
@@ -22,7 +26,12 @@ const defaultPokemonInfo: IPokemon = {
     life: 100,
     currentLife: 100,
     image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/149.png',
-    powers: [{ id: 0, power: 'Mega-Punch', value: 10 }],
+    powers: [
+        { id: 0, name: 'Mega-Punch', powerLevel: 10 },
+        { id: 1, name: 'Jump', powerLevel: 20 },
+        { id: 2, name: 'Snatch', powerLevel: 30 },
+        { id: 3, name: 'Crunch', powerLevel: 40 },
+    ],
 };
 
 export const MainScreen = () => {
@@ -48,25 +57,72 @@ export const MainScreen = () => {
         setPokemonsList(sortedList);
     };
 
+    const powersGenerate = async (pokemon: PokemonInfo): Promise<IPower[]> => {
+        const movesPokemon = [];
+        for (let i = 0; i < 4; i++) {
+            const indice = Math.floor(Math.random() * pokemon.moves.length);
+            movesPokemon.push(pokemon.moves[indice]);
+        }
+
+        const promesas = movesPokemon.map((ataque) => {
+            console.log(ataque.move.url);
+            return fetch(ataque.move.url);
+        });
+
+        const respuestas = await Promise.all(promesas);
+
+        const ataques = await Promise.all(
+            respuestas.map((respuesta) => {
+                return respuesta.json();
+            })
+        );
+
+        return ataques.map((ataque, index) => {
+            return { id: index, name: ataque.name, powerLevel: ataque.power || 10 };
+        }
+        );
+    };
+
     const getPokemonInfo = () => {
         dropdownPokemon1.url && fetchPokemon(dropdownPokemon1.url).then((result: PokemonInfo) => {
-            setPokemon1Info({
-                ...dropdownPokemon1,
-                life: result.stats[0].base_stat,
-                image: result.sprites.front_default,
-                currentLife: result.stats[0].base_stat,
+            powersGenerate(result).then((powers) => {
+                setPokemon1Info({
+                    ...dropdownPokemon1,
+                    life: result.stats[0].base_stat,
+                    image: result.sprites.front_default,
+                    currentLife: result.stats[0].base_stat,
+                    powers,
+                });
             });
-            //console.log(pokemon1Info);
+
+            console.log(pokemon1Info);
         });
         dropdownPokemon2.url && fetchPokemon(dropdownPokemon2.url).then((result: PokemonInfo) => {
-            setPokemon2Info({
-                ...dropdownPokemon2,
-                life: result.stats[0].base_stat,
-                image: result.sprites.front_default,
-                currentLife: result.stats[0].base_stat,
+            powersGenerate(result).then((powers) => {
+                setPokemon2Info({
+                    ...dropdownPokemon2,
+                    life: result.stats[0].base_stat,
+                    image: result.sprites.front_default,
+                    currentLife: result.stats[0].base_stat,
+                    powers,
+                });
             });
             console.log(pokemon2Info);
         });
+    };
+
+    const attact = (attackingPokemon: IPokemon, powerLevel: number) => {
+        if (attackingPokemon.name === pokemon1Info.name) {
+            let currentLife = pokemon2Info.currentLife - powerLevel;
+            currentLife = currentLife <= 0 ? 0 : currentLife;
+            console.log(currentLife);
+            setPokemon2Info({ ...pokemon2Info, currentLife });
+        }
+        else {
+            let currentLife = pokemon1Info.currentLife - powerLevel;
+            currentLife = currentLife <= 0 ? 0 : currentLife;
+            setPokemon1Info({ ...pokemon1Info, currentLife });
+        }
     };
 
     const _renderItem = (item: IPokemon) => {
@@ -133,33 +189,33 @@ export const MainScreen = () => {
             </View>
             <View style={styles.nameLifeSection}>
                 <View style={styles.nameLife}>
-                    <Text style={styles.pokemonNameText}>{`${dropdownPokemon1.name} ${pokemon1Info.life}`}</Text>
-                    <Progress.Bar progress={0.8} width={100} height={16} />
+                    <Text style={styles.pokemonNameText}>{`${dropdownPokemon1.name} ${pokemon1Info.currentLife}/${pokemon1Info.life}`}</Text>
+                    <Progress.Bar progress={(pokemon1Info.currentLife / pokemon1Info.life)} width={100} height={16} />
                 </View>
                 <View style={styles.nameLife}>
-                    <Text style={styles.pokemonNameText}>{`${dropdownPokemon2.name} ${pokemon2Info.life}`}</Text>
-                    <Progress.Bar progress={0.8} width={100} height={16} />
+                    <Text style={styles.pokemonNameText}>{`${dropdownPokemon2.name} ${pokemon2Info.currentLife}/${pokemon2Info.life}`}</Text>
+                    <Progress.Bar progress={(pokemon2Info.currentLife / pokemon2Info.life)} width={100} height={16} />
                 </View>
             </View>
             <View style={styles.powersSection}>
                 <View style={styles.pokemonPowerSection}>
                     <View style={styles.rowPowerSection}>
-                        <PowerButton powerName="Poder 10" value={10} onPressPower={value => { console.log(value); }} />
-                        <PowerButton powerName="Poder 20" value={20} onPressPower={value => { console.log(value); }} />
+                        <PowerButton powerName={pokemon1Info.powers[0].name} powerLevel={pokemon1Info.powers[0].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
+                        <PowerButton powerName={pokemon1Info.powers[1].name} powerLevel={pokemon1Info.powers[1].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
                     </View>
                     <View style={styles.rowPowerSection}>
-                        <PowerButton powerName="Take down" value={30} onPressPower={value => { console.log(value); }} />
-                        <PowerButton powerName="Poder 40" value={40} onPressPower={value => { console.log(value); }} />
+                        <PowerButton powerName={pokemon1Info.powers[2].name} powerLevel={pokemon1Info.powers[2].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
+                        <PowerButton powerName={pokemon1Info.powers[3].name} powerLevel={pokemon1Info.powers[3].powerLevel} onPressPower={value => { attact(pokemon1Info, value); }} />
                     </View>
                 </View>
                 <View style={styles.pokemonPowerSection}>
                     <View style={styles.rowPowerSection}>
-                        <PowerButton powerName="Poder 50" value={50} onPressPower={value => { console.log(value); }} />
-                        <PowerButton powerName="Poder 60" value={60} onPressPower={value => { console.log(value); }} />
+                        <PowerButton powerName={pokemon2Info.powers[0].name} powerLevel={pokemon2Info.powers[0].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
+                        <PowerButton powerName={pokemon2Info.powers[1].name} powerLevel={pokemon2Info.powers[1].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
                     </View>
                     <View style={styles.rowPowerSection}>
-                        <PowerButton powerName="Poder 70" value={70} onPressPower={value => { console.log(value); }} />
-                        <PowerButton powerName="Poder 80" value={80} onPressPower={value => { console.log(value); }} />
+                        <PowerButton powerName={pokemon2Info.powers[2].name} powerLevel={pokemon2Info.powers[2].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
+                        <PowerButton powerName={pokemon2Info.powers[3].name} powerLevel={pokemon2Info.powers[3].powerLevel} onPressPower={value => { attact(pokemon2Info, value); }} />
                     </View>
                 </View>
             </View>
