@@ -14,12 +14,12 @@ export const renderPowerButtonSection = ({pokemonPowers}: Props) => {
     return (
         <View style={styles.pokemonPowerSection}>
             <View style={styles.rowPowerSection}>
-                <PowerButton powerName={pokemonPowers[0].name} value={pokemonPowers[0].value} onPressPower={() => pokemonPowers[0].onPressPower(pokemonPowers[0].value)} />
-                <PowerButton powerName={pokemonPowers[0].name} value={pokemonPowers[0].value} onPressPower={() => pokemonPowers[0].onPressPower(pokemonPowers[0].value)} />
+                <PowerButton powerName={pokemonPowers[0].name} powerLevel={pokemonPowers[0].value} onPressPower={() => pokemonPowers[0].onPressPower(pokemonPowers[0].value)} />
+                <PowerButton powerName={pokemonPowers[0].name} powerLevel={pokemonPowers[0].value} onPressPower={() => pokemonPowers[0].onPressPower(pokemonPowers[0].value)} />
             </View>
             <View style={styles.rowPowerSection}>
-                <PowerButton powerName={pokemonPowers[0].name} value={pokemonPowers[0].value} onPressPower={() => pokemonPowers[0].onPressPower(pokemonPowers[0].value)} />
-                <PowerButton powerName={pokemonPowers[0].name} value={pokemonPowers[0].value} onPressPower={() => pokemonPowers[0].onPressPower(pokemonPowers[0].value)} />
+                <PowerButton powerName={pokemonPowers[0].name} powerLevel={pokemonPowers[0].value} onPressPower={() => pokemonPowers[0].onPressPower(pokemonPowers[0].value)} />
+                <PowerButton powerName={pokemonPowers[0].name} powerLevel={pokemonPowers[0].value} onPressPower={() => pokemonPowers[0].onPressPower(pokemonPowers[0].value)} />
             </View>
         </View>
     );
